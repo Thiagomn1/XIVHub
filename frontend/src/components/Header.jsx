@@ -1,16 +1,17 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import { Link } from "react-router-dom"
 import Modal from "react-modal"
 import { FaRegArrowAltCircleRight } from "react-icons/fa"
+import UserContext from "../context/user/userContext"
 import Image from "../images/test.png"
 
 Modal.setAppElement("#root")
 
 function Header() {
-  const [loggedIn, setLoggedIn] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [modalOpen, setModalOpen] = useState(false)
+  const { xivUser } = useContext(UserContext)
 
   const openModal = () => setModalOpen(true)
   const closeModal = () => setModalOpen(false)
@@ -23,7 +24,7 @@ function Header() {
     <nav className="header">
       <Link to="/">
         <h1 className="logo">
-          XIV <span>Venue</span>
+          XIV <span>Hub</span>
         </h1>
       </Link>
 
@@ -33,7 +34,7 @@ function Header() {
           <li>Events</li>
         </Link>
       </ul>
-      {loggedIn ? (
+      {xivUser ? (
         <div className="character">
           <p className="name">Kaede Fujiko</p>
           <i className="arrow-down"></i>

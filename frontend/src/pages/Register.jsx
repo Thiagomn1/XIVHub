@@ -1,6 +1,6 @@
-import { useState } from "react"
-import axios from "axios"
+import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router"
+import UserContext from "../context/user/userContext"
 
 function Register() {
   const [email, setEmail] = useState("")
@@ -8,34 +8,38 @@ function Register() {
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
 
+  const { xivUser, registerUser, isError } = useContext(UserContext)
+
   const navigate = useNavigate()
 
-  const registerUser = async event => {
-    event.preventDefault()
-    const id = lodestone.split(/(\d+)/)
-
-    const xivResponse = await axios.get(`https://xivapi.com/character/${id[1]}`)
-
-    if (xivResponse.data) {
-      localStorage.setItem("user", JSON.stringify(xivResponse.data))
-
-      const userData = {
-        name: xivResponse.data.Character.Name,
-        email,
-        password,
-      }
-
-      console.log(userData)
-
-      const response = await axios.post("/api/users", userData)
-
+  useEffect(() => {
+    if (xivUser) {
       navigate("/")
+    }
+
+    if (isError) {
+      console.log(isError)
+    }
+  })
+
+  const register = async event => {
+    event.preventDefault()
+
+    const userData = {
+      email,
+      lodestone,
+      password,
+    }
+
+    const user = await registerUser(userData)
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user))
     }
   }
 
   return (
     <div className="form-control container" style={{ width: "400px" }}>
-      <form onSubmit={registerUser}>
+      <form onSubmit={register}>
         <div className="form-group">
           <label htmlFor="email" className="form-text">
             <span className="required">* </span> Email:
