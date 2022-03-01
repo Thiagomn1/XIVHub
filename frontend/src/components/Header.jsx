@@ -1,5 +1,5 @@
-import { useState, useContext } from "react"
-import { Link } from "react-router-dom"
+import { useState, useContext, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import Modal from "react-modal"
 import { FaRegArrowAltCircleRight } from "react-icons/fa"
 import UserContext from "../context/user/userContext"
@@ -11,13 +11,27 @@ function Header() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [modalOpen, setModalOpen] = useState(false)
-  const { xivUser } = useContext(UserContext)
+  const { xivUser, logoutUser, loginUser } = useContext(UserContext)
+
+  const navigate = useNavigate()
 
   const openModal = () => setModalOpen(true)
   const closeModal = () => setModalOpen(false)
 
-  const onSubmit = event => {
+  const onSubmit = async event => {
     event.preventDefault()
+    const userData = {
+      email,
+      password,
+    }
+    await loginUser(userData)
+    navigate("/")
+    closeModal()
+  }
+
+  const logout = () => {
+    logoutUser()
+    navigate("/")
   }
 
   return (
@@ -37,8 +51,11 @@ function Header() {
       {xivUser ? (
         <div className="character">
           <p className="name">Kaede Fujiko</p>
-          <i className="arrow-down"></i>
           <img src={Image} className="profile-img" alt="" />
+          <button className="btn-outline" onClick={logout}>
+            <FaRegArrowAltCircleRight className="btn-icon" />
+            Logout
+          </button>
         </div>
       ) : (
         <button className="btn" onClick={openModal}>

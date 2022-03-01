@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router"
 import UserContext from "../context/user/userContext"
+import { motion } from "framer-motion"
 
 function Register() {
   const [email, setEmail] = useState("")
@@ -20,7 +21,7 @@ function Register() {
     if (isError) {
       console.log(isError)
     }
-  })
+  }, [xivUser, isError, navigate])
 
   const register = async event => {
     event.preventDefault()
@@ -31,10 +32,7 @@ function Register() {
       password,
     }
 
-    const user = await registerUser(userData)
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user))
-    }
+    await registerUser(userData)
   }
 
   return (

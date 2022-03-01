@@ -14,6 +14,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    lodestoneId: {
+      type: String,
+      required: true,
+    },
     isMod: {
       type: Boolean,
       required: true,
