@@ -67,6 +67,7 @@ function Header() {
       <Modal
         isOpen={modalOpen}
         onRequestClose={closeModal}
+        closeTimeoutMS={500}
         style={{
           content: {
             width: "90%",

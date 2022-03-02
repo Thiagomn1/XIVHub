@@ -1,12 +1,14 @@
+const axios = require("axios")
 const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 
 const User = require("../models/UserModel")
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { lodestoneId, name, email, password } = req.body
+  const { email, password } = req.body
 
-  if (!lodestoneId || !name || !email || !password) {
+  if (!email || !password) {
     res.status(400)
     throw new Error("Please include all fields")
   }
@@ -22,18 +24,15 @@ const registerUser = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt)
 
   const user = await User.create({
-    name,
     email,
-    lodestoneId,
     password: hashedPassword,
   })
 
   if (user) {
     res.json({
       _id: user._id,
-      name: user.name,
-      lodestoneId: user.lodestoneId,
       email: user.email,
+      token: generateToken(user._id),
     })
   } else {
     res.status(400)
@@ -49,9 +48,8 @@ const loginUser = asyncHandler(async (req, res) => {
   if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
       _id: user._id,
-      name: user.name,
       email: user.email,
-      lodestoneId: user.lodestoneId,
+      token: generateToken(user._id),
     })
   } else {
     res.status(401)
@@ -59,7 +57,36 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 })
 
+const addCharacter = asyncHandler(async (req, res) => {
+  const { name, email, lodestoneId, character } = req.body
+
+  const user = await User.findOne({ email })
+
+  if (user) {
+    const query = { email: email }
+    const update = { $set: { name: name, lodestoneId: lodestoneId }, $push: { character: character } }
+    await User.findOneAndUpdate(query, update)
+
+    res.json({
+      name,
+      email,
+      lodestoneId,
+      character,
+    })
+  } else {
+    res.status(401)
+    throw new Error("User not found")
+  }
+})
+
+const generateToken = id => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  })
+}
+
 module.exports = {
   registerUser,
+  addCharacter,
   loginUser,
 }

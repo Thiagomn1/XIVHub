@@ -4,7 +4,7 @@ const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      default: "",
     },
     email: {
       type: String,
@@ -16,12 +16,11 @@ const userSchema = mongoose.Schema(
     },
     lodestoneId: {
       type: String,
-      required: true,
+      default: "",
     },
-    isMod: {
-      type: Boolean,
-      required: true,
-      default: false,
+    character: {
+      type: Array,
+      default: [],
     },
   },
   {

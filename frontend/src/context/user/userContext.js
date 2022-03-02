@@ -1,6 +1,7 @@
 import { createContext, useReducer } from "react"
 import userReducer from "./userReducer"
 import axios from "axios"
+import userService from "./userService"
 
 const UserContext = createContext()
 
@@ -16,23 +17,7 @@ export const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, initialState)
 
   const registerUser = async userData => {
-    let userJSON = []
-    const id = userData.lodestone.split(/(\d+)/)
-    const xivResponse = await axios.get(`https://xivapi.com/character/${id[1]}`).catch(error => {
-      if (error.response) {
-        dispatch({
-          type: "ERROR",
-          payload:
-            (error.response && error.response.data && error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        })
-      }
-    })
-
     const user = {
-      name: xivResponse.data.Character.Name,
-      lodestoneId: id[1].toString(),
       email: userData.email,
       password: userData.password,
     }
@@ -50,18 +35,42 @@ export const UserProvider = ({ children }) => {
     })
 
     if (response.data) {
-      userJSON.push(xivResponse.data, user)
-      localStorage.setItem("user", JSON.stringify(userJSON))
+      localStorage.setItem("user", JSON.stringify(response.data))
       dispatch({
         type: "REGISTER_USER",
-        payload: userJSON,
+        payload: response.data,
       })
     }
   }
 
-  const loginUser = async userData => {
-    let userJSON = []
+  const addCharacter = async id => {
+    const xivResponse = await axios.get(`https://xivapi.com/character/${id}`).catch(error => {
+      if (error.response) {
+        dispatch({
+          type: "ERROR",
+          payload:
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        })
+      }
+    })
 
+    const email = xivUser.email
+
+    const character = {
+      name: xivResponse.data.Character.Name,
+      email: email,
+      lodestoneId: id,
+      character: xivResponse.data.Character,
+    }
+
+    const characterData = await userService.characterAdd(character)
+
+    console.log(characterData)
+  }
+
+  const loginUser = async userData => {
     const response = await axios.post("/api/users/login", userData).catch(error => {
       if (error.response) {
         dispatch({
@@ -75,25 +84,10 @@ export const UserProvider = ({ children }) => {
     })
 
     if (response.data) {
-      const xivResponse = await axios
-        .get(`https://xivapi.com/character/${response.data.lodestoneId}`)
-        .catch(error => {
-          if (error.response) {
-            dispatch({
-              type: "ERROR",
-              payload:
-                (error.response && error.response.data && error.response.data.message) ||
-                error.message ||
-                error.toString(),
-            })
-          }
-        })
-
-      userJSON.push(xivResponse.data, response.data)
-      localStorage.setItem("user", JSON.stringify(userJSON))
+      localStorage.setItem("user", JSON.stringify(response.data))
       dispatch({
         type: "LOGIN_USER",
-        payload: userJSON,
+        payload: response.data,
       })
     }
   }
@@ -113,6 +107,7 @@ export const UserProvider = ({ children }) => {
         loading: state.loading,
         isError: state.isError,
         registerUser,
+        addCharacter,
         loginUser,
         logoutUser,
       }}

@@ -11,7 +11,7 @@ function Home() {
       <div className="hero container">
         <header className="hero-content">
           <h2 className="heading">XIVHub</h2>
-          <p className="text" style={{ paddingBottom: "20px" }}>
+          <p className="text">
             {/* XIVHub provides a platform for players to browse current venues that are open in-game, and allows
             for venue owners to announce their opening dates and special events for players to see and attend. */}
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et odio nec magna eleifend rhoncus

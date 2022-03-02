@@ -1,11 +1,9 @@
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router"
 import UserContext from "../context/user/userContext"
-import { motion } from "framer-motion"
 
 function Register() {
   const [email, setEmail] = useState("")
-  const [lodestone, setLodestone] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
 
@@ -28,7 +26,6 @@ function Register() {
 
     const userData = {
       email,
-      lodestone,
       password,
     }
 
@@ -75,19 +72,6 @@ function Register() {
             id="passwordConfirm"
             className="form-input"
             onChange={event => setPasswordConfirm(event.target.value)}
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="lodestone" className="form-text">
-            <span className="required">* </span>Lodestone URL:
-          </label>
-          <input
-            type="text"
-            name="lodestone"
-            value={lodestone}
-            id="lodestone"
-            className="form-input"
-            onChange={event => setLodestone(event.target.value)}
           />
         </div>
         <button className="btn">Register</button>
