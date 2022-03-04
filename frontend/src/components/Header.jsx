@@ -11,9 +11,15 @@ function Header() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [modalOpen, setModalOpen] = useState(false)
-  const { xivUser, logoutUser, loginUser } = useContext(UserContext)
+  const { xivUser, logoutUser, loginUser, isError } = useContext(UserContext)
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isError) {
+      console.log(isError)
+    }
+  }, [xivUser, isError, navigate])
 
   const openModal = () => setModalOpen(true)
   const closeModal = () => setModalOpen(false)
@@ -50,7 +56,7 @@ function Header() {
       </ul>
       {xivUser ? (
         <div className="character">
-          <p className="name">Kaede Fujiko</p>
+          <p className="name">{xivUser.name}</p>
           <img src={Image} className="profile-img" alt="" />
           <button className="btn-outline" onClick={logout}>
             <FaRegArrowAltCircleRight className="btn-icon" />

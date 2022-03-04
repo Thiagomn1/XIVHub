@@ -6,6 +6,7 @@ function Register() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
+  const [error, setError] = useState("")
 
   const { xivUser, registerUser, isError } = useContext(UserContext)
 
@@ -24,12 +25,16 @@ function Register() {
   const register = async event => {
     event.preventDefault()
 
-    const userData = {
-      email,
-      password,
-    }
+    if (password !== passwordConfirm) {
+      setError("Passwords do not match")
+    } else {
+      const userData = {
+        email,
+        password,
+      }
 
-    await registerUser(userData)
+      await registerUser(userData)
+    }
   }
 
   return (
@@ -76,6 +81,7 @@ function Register() {
         </div>
         <button className="btn">Register</button>
       </form>
+      <span className="text">{error}</span>
     </div>
   )
 }

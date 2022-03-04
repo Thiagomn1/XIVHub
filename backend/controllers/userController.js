@@ -1,4 +1,3 @@
-const axios = require("axios")
 const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
@@ -34,7 +33,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.json({
       _id: user._id,
       email: user.email,
-      token,
     })
   } else {
     res.status(400)
@@ -75,28 +73,6 @@ const logoutUser = asyncHandler(async (req, res) => {
   res.send({ success: true })
 })
 
-const addCharacter = asyncHandler(async (req, res) => {
-  const { name, email, lodestoneId, character } = req.body
-
-  const user = await User.findOne({ email })
-
-  if (user) {
-    const query = { email: email }
-    const update = { $set: { name: name, lodestoneId: lodestoneId }, $push: { character: character } }
-    await User.findOneAndUpdate(query, update)
-
-    res.json({
-      name,
-      email,
-      lodestoneId,
-      character,
-    })
-  } else {
-    res.status(401)
-    throw new Error("User not found")
-  }
-})
-
 const getMe = asyncHandler(async (req, res) => {
   const user = {
     id: req.user._id,
@@ -105,6 +81,31 @@ const getMe = asyncHandler(async (req, res) => {
   }
 
   res.json(user)
+})
+
+const addCharacter = asyncHandler(async (req, res) => {
+  const { name, email, lodestoneId, character } = req.body
+
+  let characterArray = []
+  characterArray.push(character)
+
+  const user = await User.findOne({ email })
+
+  if (user) {
+    const query = { email: email }
+    const update = { $set: { name: name, lodestoneId: lodestoneId, character: character } }
+    const user = await User.findOneAndUpdate(query, update)
+
+    res.json({
+      name,
+      email,
+      characterArray,
+      _id: user._id,
+    })
+  } else {
+    res.status(401)
+    throw new Error("User not found")
+  }
 })
 
 const generateToken = id => {

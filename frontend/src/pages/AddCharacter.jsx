@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import UserContext from "../context/user/userContext"
 
 function Settings() {
@@ -6,11 +7,20 @@ function Settings() {
 
   const { addCharacter, isError } = useContext(UserContext)
 
-  const onSubmit = event => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isError) {
+      console.log(isError)
+    }
+  }, [isError])
+
+  const onSubmit = async event => {
     event.preventDefault()
     const lodestoneSplit = lodestone.split(/(\d+)/)
     const id = lodestoneSplit[1]
-    addCharacter(id)
+    await addCharacter(id)
+    navigate("/")
   }
 
   return (

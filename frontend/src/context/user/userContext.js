@@ -11,18 +11,59 @@ export const UserProvider = ({ children }) => {
   const initialState = {
     xivUser: xivUser ? xivUser : null,
     loading: false,
+    isSuccess: false,
     isError: "",
   }
 
   const [state, dispatch] = useReducer(userReducer, initialState)
 
   const registerUser = async userData => {
+    dispatch({
+      type: "LOADING",
+    })
+
     const user = {
       email: userData.email,
       password: userData.password,
     }
 
-    const response = await axios.post("/api/users", user).catch(error => {
+    try {
+      const response = await userService.register(user)
+      dispatch({
+        type: "REGISTER_USER",
+        payload: response,
+      })
+    } catch (error) {
+      dispatch({
+        type: "ERROR",
+        payload:
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString(),
+      })
+    }
+  }
+
+  const loginUser = async userData => {
+    try {
+      const response = await userService.login(userData)
+      dispatch({
+        type: "LOGIN_USER",
+        payload: response,
+      })
+    } catch (error) {
+      dispatch({
+        type: "ERROR",
+        payload:
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString(),
+      })
+    }
+  }
+
+  const logoutUser = async () => {
+    await axios.post("/api/users/logout").catch(error => {
       if (error.response) {
         dispatch({
           type: "ERROR",
@@ -33,14 +74,11 @@ export const UserProvider = ({ children }) => {
         })
       }
     })
+    localStorage.clear()
 
-    if (response.data) {
-      localStorage.setItem("user", JSON.stringify(response.data))
-      dispatch({
-        type: "REGISTER_USER",
-        payload: response.data,
-      })
-    }
+    dispatch({
+      type: "LOGOUT_USER",
+    })
   }
 
   const addCharacter = async id => {
@@ -65,50 +103,21 @@ export const UserProvider = ({ children }) => {
       character: xivResponse.data.Character,
     }
 
-    const characterData = await userService.characterAdd(character)
-
-    console.log(characterData)
-  }
-
-  const loginUser = async userData => {
-    const response = await axios.post("/api/users/login", userData).catch(error => {
-      if (error.response) {
-        dispatch({
-          type: "ERROR",
-          payload:
-            (error.response && error.response.data && error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        })
-      }
-    })
-
-    if (response.data) {
-      localStorage.setItem("user", JSON.stringify(response.data))
+    try {
+      const response = await userService.characterAdd(character)
       dispatch({
-        type: "LOGIN_USER",
-        payload: response.data,
+        type: "ADD_CHARACTER",
+        payload: response,
+      })
+    } catch (error) {
+      dispatch({
+        type: "ERROR",
+        payload:
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString(),
       })
     }
-  }
-
-  const logoutUser = async () => {
-    await axios.post("/api/users/logout").catch(error => {
-      if (error.response) {
-        dispatch({
-          type: "ERROR",
-          payload:
-            (error.response && error.response.data && error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        })
-      }
-    })
-    localStorage.clear()
-
-    dispatch({
-      type: "LOGOUT_USER",
-    })
   }
 
   return (
@@ -118,9 +127,9 @@ export const UserProvider = ({ children }) => {
         loading: state.loading,
         isError: state.isError,
         registerUser,
-        addCharacter,
         loginUser,
         logoutUser,
+        addCharacter,
       }}
     >
       {children}
