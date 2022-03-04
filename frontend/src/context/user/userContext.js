@@ -82,29 +82,13 @@ export const UserProvider = ({ children }) => {
   }
 
   const addCharacter = async id => {
-    const xivResponse = await axios.get(`https://xivapi.com/character/${id}`).catch(error => {
-      if (error.response) {
-        dispatch({
-          type: "ERROR",
-          payload:
-            (error.response && error.response.data && error.response.data.message) ||
-            error.message ||
-            error.toString(),
-        })
-      }
-    })
-
-    const email = xivUser.email
-
-    const character = {
-      name: xivResponse.data.Character.Name,
-      email: email,
+    const data = {
+      email: xivUser.email,
       lodestoneId: id,
-      character: xivResponse.data.Character,
     }
 
     try {
-      const response = await userService.characterAdd(character)
+      const response = await userService.characterAdd(data)
       dispatch({
         type: "ADD_CHARACTER",
         payload: response,

@@ -12,6 +12,7 @@
   "author": "Thiago Nascimbeni",
   "license": "MIT",
   "dependencies": {
+    "@xivapi/js": "^0.4.0",
     "axios": "^0.26.0",
     "bcryptjs": "^2.4.3",
     "concurrently": "^7.0.0",

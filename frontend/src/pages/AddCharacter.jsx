@@ -35,7 +35,6 @@ function Settings() {
           <input
             type="character"
             name="character"
-            value="character"
             id="character"
             value={lodestone}
             onChange={event => setLodestone(event.target.value)}

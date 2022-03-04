@@ -1,6 +1,11 @@
 const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const XIVAPI = require("@xivapi/js")
+const xiv = new XIVAPI({
+  private_key: process.env.XIV_API_KEY,
+  language: "en",
+})
 
 const User = require("../models/UserModel")
 
@@ -29,7 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (user) {
     const token = generateToken(user._id)
-    res.cookie("token", token, { httpOnl: true })
+    res.cookie("token", token, { httpOnly: true })
     res.json({
       _id: user._id,
       email: user.email,
@@ -47,7 +52,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = generateToken(user._id)
-    res.cookie("token", token, { httpOnl: true })
+    res.cookie("token", token, { httpOnly: true })
 
     if (user.character && user.name) {
       res.json({
@@ -84,29 +89,46 @@ const getMe = asyncHandler(async (req, res) => {
 })
 
 const addCharacter = asyncHandler(async (req, res) => {
-  const { name, email, lodestoneId, character } = req.body
+  const { email, lodestoneId } = req.body
+
+  if (!email || !lodestoneId) {
+    res.status(400)
+    throw new Error("User not found")
+  }
 
   let characterArray = []
-  characterArray.push(character)
 
+  const character = await verifyCharacter(lodestoneId)
   const user = await User.findOne({ email })
 
-  if (user) {
+  if (character && user) {
+    characterArray.push(character)
     const query = { email: email }
-    const update = { $set: { name: name, lodestoneId: lodestoneId, character: character } }
+    const update = {
+      $set: { name: character.Character.Name, lodestoneId: lodestoneId, character: character },
+    }
     const user = await User.findOneAndUpdate(query, update)
 
     res.json({
-      name,
+      name: character.Character.Name,
       email,
-      characterArray,
+      character: characterArray,
       _id: user._id,
     })
   } else {
     res.status(401)
-    throw new Error("User not found")
+    throw new Error("There was an error verifying your character")
   }
 })
+
+const verifyCharacter = async id => {
+  let res = await xiv.character.get(id)
+  if (res.Character.Bio === "fflogs-LvxAHrbGXfdYncmCwRQkTaK1PpD624zN") {
+    return res
+  } else {
+    return false
+  }
+}
 
 const generateToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {

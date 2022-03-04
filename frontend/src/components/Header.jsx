@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom"
 import Modal from "react-modal"
 import { FaRegArrowAltCircleRight } from "react-icons/fa"
 import UserContext from "../context/user/userContext"
-import Image from "../images/test.png"
 
 Modal.setAppElement("#root")
 
@@ -57,7 +56,7 @@ function Header() {
       {xivUser ? (
         <div className="character">
           <p className="name">{xivUser.name}</p>
-          <img src={Image} className="profile-img" alt="" />
+          <img src={xivUser.character[0].Avatar} className="profile-img" alt="" />
           <button className="btn-outline" onClick={logout}>
             <FaRegArrowAltCircleRight className="btn-icon" />
             Logout
