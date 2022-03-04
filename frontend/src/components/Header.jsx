@@ -29,8 +29,8 @@ function Header() {
     closeModal()
   }
 
-  const logout = () => {
-    logoutUser()
+  const logout = async () => {
+    await logoutUser()
     navigate("/")
   }
 

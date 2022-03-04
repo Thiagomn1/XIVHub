@@ -92,7 +92,18 @@ export const UserProvider = ({ children }) => {
     }
   }
 
-  const logoutUser = () => {
+  const logoutUser = async () => {
+    await axios.post("/api/users/logout").catch(error => {
+      if (error.response) {
+        dispatch({
+          type: "ERROR",
+          payload:
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString(),
+        })
+      }
+    })
     localStorage.clear()
 
     dispatch({
