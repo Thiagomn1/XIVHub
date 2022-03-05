@@ -11,7 +11,8 @@ const userReducer = (state, action) => {
         ...state,
         loading: false,
         isSuccess: true,
-        xivUser: action.payload,
+        xivUser: action.payload[0],
+        user: action.payload[1],
       }
 
     case "LOGIN_USER":
@@ -19,7 +20,8 @@ const userReducer = (state, action) => {
         ...state,
         loading: false,
         isSuccess: true,
-        xivUser: action.payload,
+        xivUser: action.payload[0],
+        user: action.payload[1],
       }
 
     case "LOGOUT_USER":
@@ -28,6 +30,7 @@ const userReducer = (state, action) => {
         loading: false,
         isSuccess: true,
         xivUser: null,
+        user: null,
       }
 
     case "ADD_CHARACTER":

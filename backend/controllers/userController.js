@@ -10,9 +10,9 @@ const xiv = new XIVAPI({
 const User = require("../models/UserModel")
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body
+  const { email, password, id } = req.body
 
-  if (!email || !password) {
+  if (!email || !password || !id) {
     res.status(400)
     throw new Error("Please include all fields")
   }
@@ -24,24 +24,40 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("This user is already registered")
   }
 
-  const salt = await bcrypt.genSalt(10)
-  const hashedPassword = await bcrypt.hash(password, salt)
+  const character = await getCharacter(id)
 
-  const user = await User.create({
-    email,
-    password: hashedPassword,
-  })
+  if (character) {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
 
-  if (user) {
-    const token = generateToken(user._id)
-    res.cookie("token", token, { httpOnly: true })
-    res.json({
-      _id: user._id,
-      email: user.email,
+    const user = await User.create({
+      name: character.Character.Name,
+      email,
+      password: hashedPassword,
+      lodestoneId: id,
+      character: character,
     })
+
+    if (user) {
+      const token = generateToken(user._id)
+      res.cookie("token", token, { httpOnly: true })
+      res.json([
+        {
+          name: user.name,
+          character: user.character,
+        },
+        {
+          _id: user._id,
+          email: user.email,
+        },
+      ])
+    } else {
+      res.status(400)
+      throw new Error("Invalid Data")
+    }
   } else {
     res.status(400)
-    throw new Error("Invalid Data")
+    throw new Error("Couldn't fetch character data")
   }
 })
 
@@ -54,19 +70,16 @@ const loginUser = asyncHandler(async (req, res) => {
     const token = generateToken(user._id)
     res.cookie("token", token, { httpOnly: true })
 
-    if (user.character && user.name) {
-      res.json({
+    res.json([
+      {
         name: user.name,
         character: user.character,
+      },
+      {
         _id: user._id,
         email: user.email,
-      })
-    } else {
-      res.json({
-        _id: user._id,
-        email: user.email,
-      })
-    }
+      },
+    ])
   } else {
     res.status(401)
     throw new Error("Invalid Credentials")
@@ -111,15 +124,22 @@ const addCharacter = asyncHandler(async (req, res) => {
 
     res.json({
       name: character.Character.Name,
-      email,
       character: characterArray,
-      _id: user._id,
     })
   } else {
     res.status(401)
     throw new Error("There was an error verifying your character")
   }
 })
+
+const getCharacter = async id => {
+  let res = await xiv.character.get(id)
+  if (res.Character !== null) {
+    return res
+  } else {
+    return false
+  }
+}
 
 const verifyCharacter = async id => {
   let res = await xiv.character.get(id)

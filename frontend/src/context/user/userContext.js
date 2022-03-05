@@ -5,10 +5,12 @@ import userService from "./userService"
 
 const UserContext = createContext()
 
-const xivUser = JSON.parse(localStorage.getItem("user"))
+const xivUser = JSON.parse(localStorage.getItem("xivUser"))
+const user = JSON.parse(localStorage.getItem("user"))
 
 export const UserProvider = ({ children }) => {
   const initialState = {
+    user: user ? user : null,
     xivUser: xivUser ? xivUser : null,
     loading: false,
     isSuccess: false,
@@ -25,6 +27,7 @@ export const UserProvider = ({ children }) => {
     const user = {
       email: userData.email,
       password: userData.password,
+      id: userData.id,
     }
 
     try {
@@ -107,6 +110,7 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
+        user: state.user,
         xivUser: state.xivUser,
         loading: state.loading,
         isError: state.isError,

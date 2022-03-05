@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Modal from "react-modal"
-import { FaRegArrowAltCircleRight } from "react-icons/fa"
+import { FaRegArrowAltCircleRight, FaCog } from "react-icons/fa"
 import UserContext from "../context/user/userContext"
 
 Modal.setAppElement("#root")
@@ -54,14 +54,19 @@ function Header() {
         </Link>
       </ul>
       {xivUser ? (
-        <div className="character">
-          <p className="name">{xivUser.name}</p>
-          <img src={xivUser.character[0].Avatar} className="profile-img" alt="" />
+        <>
+          <div className="character">
+            <p className="name">{xivUser.name}</p>
+            <img src={xivUser.character[0].Character.Avatar} className="profile-img" alt="" />
+            <Link to="/addcharacter">
+              <FaCog size={18} className="cog-icon" />
+            </Link>
+          </div>
           <button className="btn-outline" onClick={logout}>
             <FaRegArrowAltCircleRight className="btn-icon" />
             Logout
           </button>
-        </div>
+        </>
       ) : (
         <button className="btn" onClick={openModal}>
           <FaRegArrowAltCircleRight className="btn-icon" />
