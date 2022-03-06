@@ -56,8 +56,8 @@ function Header() {
       {xivUser ? (
         <>
           <div className="character">
-            <p className="name">{xivUser.name}</p>
-            <img src={xivUser.character[0].Character.Avatar} className="profile-img" alt="" />
+            <p className="name">{xivUser.character[0].Name}</p>
+            <img src={xivUser.character[0].Avatar} className="profile-img" alt="" />
             <Link to="/addcharacter">
               <FaCog size={18} className="cog-icon" />
             </Link>

@@ -4,6 +4,7 @@ import UserContext from "../context/user/userContext"
 
 function Settings() {
   const [lodestone, setLodestone] = useState("")
+  const [token, setToken] = useState("")
 
   const { addCharacter, isError, xivUser } = useContext(UserContext)
 
@@ -13,6 +14,8 @@ function Settings() {
     if (isError) {
       console.log(isError)
     }
+
+    generateToken()
   }, [isError])
 
   const onSubmit = async event => {
@@ -23,6 +26,11 @@ function Settings() {
     navigate("/")
   }
 
+  const generateToken = () => {
+    const token = Math.random().toString(36).slice(2)
+    setToken(`ff-${token}`)
+  }
+
   return (
     <>
       <h2 className="heading" style={{ textAlign: "center" }}>
@@ -30,19 +38,19 @@ function Settings() {
       </h2>
       <section className="profile">
         <div className="portrait">
-          <img src={xivUser.character[0].Character.Portrait} width="200px" alt="Character portrait" />
+          <img src={xivUser.character[0].Portrait} width="200px" alt="Character portrait" />
         </div>
         <div className="card-content">
           <h3 className="card-title">Name</h3>
-          <p className="card-text">{xivUser.name}</p>
+          <p className="card-text">{xivUser.character[0].Name}</p>
           <h3 className="card-title">Server</h3>
           <p className="card-text">
-            {xivUser.character[0].Character.DC}, {xivUser.character[0].Character.Server}
+            {xivUser.character[0].DC}, {xivUser.character[0].Server}
           </p>
         </div>
       </section>
 
-      <div className="form-control container" style={{ width: "400px" }}>
+      <div className="form-control container">
         <form onSubmit={onSubmit}>
           <div className="form-group">
             <label htmlFor="email" className="form-text">
@@ -57,8 +65,16 @@ function Settings() {
               className="form-input"
             />
           </div>
-          <button className="btn">Update</button>
+          <button className="btn">Update Character</button>
         </form>
+      </div>
+
+      <div className="container" style={{ width: "800px" }}>
+        <p className="attention-text" style={{ marginTop: "20px" }}>
+          In order to verify your character ownership, please post the following code to your character's
+          Lodestone Profile. You can delete the entry once the character has been verified.
+        </p>
+        <span className="required">{token}</span>
       </div>
     </>
   )

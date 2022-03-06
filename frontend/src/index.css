@@ -196,6 +196,13 @@ h3 {
   padding-bottom: 20px;
 }
 
+.attention-text {
+  color: #fff;
+  font-weight: 300;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
 .hidden {
   display: none;
 }
@@ -303,7 +310,7 @@ h3 {
 
 .form-control {
   width: 600px;
-  max-width: 100%;
+  max-width: 90%;
 }
 
 .icon {
@@ -342,6 +349,7 @@ h3 {
 }
 
 .required {
+  font-size: 1.6rem;
   color: rgb(163, 5, 5);
 }
 

@@ -10,7 +10,7 @@ const xiv = new XIVAPI({
 const User = require("../models/UserModel")
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password, id } = req.body
+  const { email, password, id, charToken } = req.body
 
   if (!email || !password || !id) {
     res.status(400)
@@ -24,14 +24,13 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("This user is already registered")
   }
 
-  const character = await getCharacter(id)
+  const character = await verifyCharacter(id, charToken)
 
   if (character) {
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
     const user = await User.create({
-      name: character.Character.Name,
       email,
       password: hashedPassword,
       lodestoneId: id,
@@ -43,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
       res.cookie("token", token, { httpOnly: true })
       res.json([
         {
-          name: user.name,
+          name: user.character.Name,
           character: user.character,
         },
         {
@@ -120,7 +119,7 @@ const addCharacter = asyncHandler(async (req, res) => {
     const update = {
       $set: { name: character.Character.Name, lodestoneId: lodestoneId, character: character },
     }
-    const user = await User.findOneAndUpdate(query, update)
+    await User.findOneAndUpdate(query, update)
 
     res.json({
       name: character.Character.Name,
@@ -135,16 +134,16 @@ const addCharacter = asyncHandler(async (req, res) => {
 const getCharacter = async id => {
   let res = await xiv.character.get(id)
   if (res.Character !== null) {
-    return res
+    return res.Character
   } else {
     return false
   }
 }
 
-const verifyCharacter = async id => {
+const verifyCharacter = async (id, token) => {
   let res = await xiv.character.get(id)
-  if (res.Character.Bio === "fflogs-LvxAHrbGXfdYncmCwRQkTaK1PpD624zN") {
-    return res
+  if (res.Character.Bio.includes(token)) {
+    return res.Character
   } else {
     return false
   }

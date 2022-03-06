@@ -7,6 +7,7 @@ function Register() {
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
   const [lodestone, setLodestone] = useState("")
+  const [token, setToken] = useState("")
   const [error, setError] = useState("")
 
   const { xivUser, user, registerUser, isError } = useContext(UserContext)
@@ -21,6 +22,8 @@ function Register() {
     if (isError) {
       console.log(isError)
     }
+
+    generateToken()
   }, [xivUser, isError, navigate])
 
   const register = async event => {
@@ -38,13 +41,18 @@ function Register() {
         id,
       }
 
-      await registerUser(userData)
+      await registerUser(userData, token)
     }
   }
 
+  const generateToken = () => {
+    const token = Math.random().toString(36).slice(2)
+    setToken(`ff-${token}`)
+  }
+
   return (
-    <div className="form-control container" style={{ width: "400px" }}>
-      <form onSubmit={register}>
+    <>
+      <form onSubmit={register} className="form-control container">
         <div className="form-group">
           <label htmlFor="email" className="form-text">
             <span className="required">* </span> Email:
@@ -97,10 +105,17 @@ function Register() {
             onChange={event => setLodestone(event.target.value)}
           />
         </div>
+        <span className="attention-text">{error}</span>
         <button className="btn">Register</button>
       </form>
-      <span className="text">{error}</span>
-    </div>
+      <div className="container" style={{ width: "800px" }}>
+        <p className="attention-text">
+          In order to verify your character ownership, please post the following code to your character's
+          Lodestone Profile. You can delete the entry once the character has been verified.
+        </p>
+        <span className="required">{token}</span>
+      </div>
+    </>
   )
 }
 

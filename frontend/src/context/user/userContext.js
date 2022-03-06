@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(userReducer, initialState)
 
-  const registerUser = async userData => {
+  const registerUser = async (userData, token) => {
     dispatch({
       type: "LOADING",
     })
@@ -28,6 +28,7 @@ export const UserProvider = ({ children }) => {
       email: userData.email,
       password: userData.password,
       id: userData.id,
+      charToken: token,
     }
 
     try {
