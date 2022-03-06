@@ -10,9 +10,9 @@ const xiv = new XIVAPI({
 const User = require("../models/UserModel")
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password, id, charToken } = req.body
+  const { email, password } = req.body
 
-  if (!email || !password || !id) {
+  if (!email || !password) {
     res.status(400)
     throw new Error("Please include all fields")
   }
@@ -24,39 +24,30 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("This user is already registered")
   }
 
-  const character = await verifyCharacter(id, charToken)
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
 
-  if (character) {
-    const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(password, salt)
+  const user = await User.create({
+    email,
+    password: hashedPassword,
+  })
 
-    const user = await User.create({
-      email,
-      password: hashedPassword,
-      lodestoneId: id,
-      character: character,
-    })
-
-    if (user) {
-      const token = generateToken(user._id)
-      res.cookie("token", token, { httpOnly: true })
-      res.json([
-        {
-          name: user.character.Name,
-          character: user.character,
-        },
-        {
-          _id: user._id,
-          email: user.email,
-        },
-      ])
-    } else {
-      res.status(400)
-      throw new Error("Invalid Data")
-    }
+  if (user) {
+    const token = generateToken(user._id)
+    res.cookie("token", token, { httpOnly: true })
+    res.json([
+      {
+        name: user.character.Name,
+        character: user.character,
+      },
+      {
+        _id: user._id,
+        email: user.email,
+      },
+    ])
   } else {
     res.status(400)
-    throw new Error("Couldn't fetch character data")
+    throw new Error("Invalid Data")
   }
 })
 
@@ -117,12 +108,12 @@ const addCharacter = asyncHandler(async (req, res) => {
     characterArray.push(character)
     const query = { email: email }
     const update = {
-      $set: { name: character.Character.Name, lodestoneId: lodestoneId, character: character },
+      $set: { name: character.Name, lodestoneId: lodestoneId, character: character },
     }
     await User.findOneAndUpdate(query, update)
 
     res.json({
-      name: character.Character.Name,
+      lodestoneId: lodestoneId,
       character: characterArray,
     })
   } else {

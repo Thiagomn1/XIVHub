@@ -6,7 +6,6 @@ function Register() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
-  const [lodestone, setLodestone] = useState("")
   const [token, setToken] = useState("")
   const [error, setError] = useState("")
 
@@ -32,16 +31,12 @@ function Register() {
     if (password !== passwordConfirm) {
       setError("Passwords do not match")
     } else {
-      const lodestoneSplit = lodestone.split(/(\d+)/)
-      const id = lodestoneSplit[1]
-
       const userData = {
         email,
         password,
-        id,
       }
 
-      await registerUser(userData, token)
+      await registerUser(userData)
     }
   }
 
@@ -92,29 +87,9 @@ function Register() {
             onChange={event => setPasswordConfirm(event.target.value)}
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="lodestone" className="form-text">
-            <span className="required">* </span>Lodestone URL:
-          </label>
-          <input
-            type="text"
-            name="lodestone"
-            value={lodestone}
-            id="lodestone"
-            className="form-input"
-            onChange={event => setLodestone(event.target.value)}
-          />
-        </div>
         <span className="attention-text">{error}</span>
         <button className="btn">Register</button>
       </form>
-      <div className="container" style={{ width: "800px" }}>
-        <p className="attention-text">
-          In order to verify your character ownership, please post the following code to your character's
-          Lodestone Profile. You can delete the entry once the character has been verified.
-        </p>
-        <span className="required">{token}</span>
-      </div>
     </>
   )
 }

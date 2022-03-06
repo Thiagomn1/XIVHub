@@ -2,7 +2,6 @@ import axios from "axios"
 
 const register = async userData => {
   const response = await axios.post("/api/users", userData)
-  console.log(response.data)
 
   if (response.data) {
     localStorage.setItem("xivUser", JSON.stringify(response.data[0]))

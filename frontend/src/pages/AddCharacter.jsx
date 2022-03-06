@@ -36,39 +36,63 @@ function Settings() {
       <h2 className="heading" style={{ textAlign: "center" }}>
         Character
       </h2>
-      <section className="profile">
-        <div className="portrait">
-          <img src={xivUser.character[0].Portrait} width="200px" alt="Character portrait" />
-        </div>
-        <div className="card-content">
-          <h3 className="card-title">Name</h3>
-          <p className="card-text">{xivUser.character[0].Name}</p>
-          <h3 className="card-title">Server</h3>
-          <p className="card-text">
-            {xivUser.character[0].DC}, {xivUser.character[0].Server}
-          </p>
-        </div>
-      </section>
-
-      <div className="form-control container">
-        <form onSubmit={onSubmit}>
-          <div className="form-group">
-            <label htmlFor="email" className="form-text">
-              <span className="required">* </span> Update character:
-            </label>
-            <input
-              type="character"
-              name="character"
-              id="character"
-              value={lodestone}
-              onChange={event => setLodestone(event.target.value)}
-              className="form-input"
-            />
+      {xivUser && xivUser.character.length !== 0 ? (
+        <>
+          <section className="profile">
+            <div className="portrait">
+              <img src={xivUser.character[0].Portrait} width="200px" alt="Character portrait" />
+            </div>
+            <div className="card-content">
+              <h3 className="card-title">Name</h3>
+              <p className="card-text">{xivUser.character[0].Name}</p>
+              <h3 className="card-title">Server</h3>
+              <p className="card-text">
+                {xivUser.character[0].DC}, {xivUser.character[0].Server}
+              </p>
+            </div>
+          </section>
+          <div className="form-control container">
+            <form onSubmit={onSubmit}>
+              <div className="form-group">
+                <label htmlFor="email" className="form-text">
+                  <span className="required">* </span> Update character:
+                </label>
+                <input
+                  type="character"
+                  name="character"
+                  id="character"
+                  value={lodestone}
+                  onChange={event => setLodestone(event.target.value)}
+                  className="form-input"
+                />
+              </div>
+              <button className="btn">Update Character</button>
+            </form>
           </div>
-          <button className="btn">Update Character</button>
-        </form>
-      </div>
-
+        </>
+      ) : (
+        <>
+          <p className="text">No characters added yet</p>
+          <div className="form-control container">
+            <form onSubmit={onSubmit}>
+              <div className="form-group">
+                <label htmlFor="email" className="form-text">
+                  <span className="required">* </span> Update character:
+                </label>
+                <input
+                  type="character"
+                  name="character"
+                  id="character"
+                  value={lodestone}
+                  onChange={event => setLodestone(event.target.value)}
+                  className="form-input"
+                />
+              </div>
+              <button className="btn">Add Character</button>
+            </form>
+          </div>
+        </>
+      )}
       <div className="container" style={{ width: "800px" }}>
         <p className="attention-text" style={{ marginTop: "20px" }}>
           In order to verify your character ownership, please post the following code to your character's

@@ -27,8 +27,6 @@ export const UserProvider = ({ children }) => {
     const user = {
       email: userData.email,
       password: userData.password,
-      id: userData.id,
-      charToken: token,
     }
 
     try {
@@ -87,7 +85,7 @@ export const UserProvider = ({ children }) => {
 
   const addCharacter = async id => {
     const data = {
-      email: xivUser.email,
+      email: user.email,
       lodestoneId: id,
     }
 
