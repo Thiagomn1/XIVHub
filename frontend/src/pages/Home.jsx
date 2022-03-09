@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { useContext } from "react"
 import Carousel from "../components/Carousel"
 import UserContext from "../context/user/userContext"
+import "./Home.css"
 
 function Home() {
   const { xivUser } = useContext(UserContext)

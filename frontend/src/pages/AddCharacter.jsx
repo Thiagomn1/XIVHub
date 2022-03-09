@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../context/user/userContext"
+import "./AddCharacter.css"
 
 function Settings() {
   const [lodestone, setLodestone] = useState("")
