@@ -6,7 +6,6 @@ function Register() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
-  const [token, setToken] = useState("")
   const [error, setError] = useState("")
 
   const { xivUser, user, registerUser, isError } = useContext(UserContext)

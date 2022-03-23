@@ -13,10 +13,8 @@ function Home() {
         <header className="hero-content">
           <h2 className="heading">XIVHub</h2>
           <p className="text">
-            {/* XIVHub provides a platform for players to browse current venues that are open in-game, and allows
-            for venue owners to announce their opening dates and special events for players to see and attend. */}
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et odio nec magna eleifend rhoncus
-            semper porttitor quam. Suspendisse ut nisi nec dui ullamcorper porta. Maecenas ac dignissim diam.
+            XIVHub provides a platform for players to browse current venues that are open in-game, and allows
+            for venue owners to announce their opening dates and special events for players to see and attend.
           </p>
           {!xivUser && (
             <Link to="/register">
