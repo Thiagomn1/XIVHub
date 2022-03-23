@@ -6,6 +6,7 @@ function Register() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
+  const [lodestone, setLodestone] = useState("")
   const [error, setError] = useState("")
 
   const { xivUser, user, registerUser, isError } = useContext(UserContext)
@@ -20,12 +21,12 @@ function Register() {
     if (isError) {
       console.log(isError)
     }
-
-    generateToken()
   }, [xivUser, isError, navigate])
 
   const register = async event => {
     event.preventDefault()
+    const lodestoneSplit = lodestone.split(/(\d+)/)
+    const id = lodestoneSplit[1]
 
     if (password !== passwordConfirm) {
       setError("Passwords do not match")
@@ -33,15 +34,11 @@ function Register() {
       const userData = {
         email,
         password,
+        id,
       }
 
       await registerUser(userData)
     }
-  }
-
-  const generateToken = () => {
-    const token = Math.random().toString(36).slice(2)
-    setToken(`ff-${token}`)
   }
 
   return (
@@ -84,6 +81,19 @@ function Register() {
             id="passwordConfirm"
             className="form-input"
             onChange={event => setPasswordConfirm(event.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="passwordConfirm" className="form-text">
+            <span className="required">* </span>Lodestone URL:
+          </label>
+          <input
+            type="text"
+            name="lodestone"
+            value={lodestone}
+            id="lodestone"
+            className="form-input"
+            onChange={event => setLodestone(event.target.value)}
           />
         </div>
         <span className="attention-text">{error}</span>

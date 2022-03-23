@@ -10,9 +10,9 @@ const xiv = new XIVAPI({
 const User = require("../models/UserModel")
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body
+  const { email, password, lodestone } = req.body
 
-  if (!email || !password) {
+  if (!email || !password || !lodestone) {
     res.status(400)
     throw new Error("Please include all fields")
   }
@@ -24,30 +24,39 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("This user is already registered")
   }
 
-  const salt = await bcrypt.genSalt(10)
-  const hashedPassword = await bcrypt.hash(password, salt)
+  const character = await getCharacter(lodestone)
 
-  const user = await User.create({
-    email,
-    password: hashedPassword,
-  })
+  if (character) {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
 
-  if (user) {
-    const token = generateToken(user._id)
-    res.cookie("token", token, { httpOnly: true })
-    res.json([
-      {
-        name: user.character.Name,
-        character: user.character,
-      },
-      {
-        _id: user._id,
-        email: user.email,
-      },
-    ])
+    const user = await User.create({
+      email,
+      password: hashedPassword,
+      lodestoneId: lodestone,
+      character: character,
+    })
+
+    if (user) {
+      const token = generateToken(user._id)
+      res.cookie("token", token, { httpOnly: true })
+      res.json([
+        {
+          character: user.character,
+          verified: user.verified,
+        },
+        {
+          _id: user._id,
+          email: user.email,
+        },
+      ])
+    } else {
+      res.status(400)
+      throw new Error("Invalid Data")
+    }
   } else {
     res.status(400)
-    throw new Error("Invalid Data")
+    throw new Error("Character not found in Lodestone")
   }
 })
 
@@ -62,8 +71,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
     res.json([
       {
-        name: user.name,
         character: user.character,
+        verified: user.verified,
       },
       {
         _id: user._id,
@@ -91,34 +100,60 @@ const getMe = asyncHandler(async (req, res) => {
   res.json(user)
 })
 
-const addCharacter = asyncHandler(async (req, res) => {
-  const { email, lodestoneId } = req.body
+const verifyCharacter = asyncHandler(async (req, res) => {
+  const { email, lodestone, token } = req.body
+  console.log(req.body)
 
-  if (!email || !lodestoneId) {
+  if (!email || !lodestone || !token) {
     res.status(400)
     throw new Error("User not found")
   }
 
-  let characterArray = []
-
-  const character = await verifyCharacter(lodestoneId)
+  const character = await verifyToken(lodestone, token)
   const user = await User.findOne({ email })
 
   if (character && user) {
-    characterArray.push(character)
     const query = { email: email }
     const update = {
-      $set: { name: character.Name, lodestoneId: lodestoneId, character: character },
+      $set: { verified: true },
     }
     await User.findOneAndUpdate(query, update)
 
     res.json({
-      lodestoneId: lodestoneId,
-      character: characterArray,
+      character: character,
+      verified: user.verified,
     })
   } else {
     res.status(401)
     throw new Error("There was an error verifying your character")
+  }
+})
+
+const updateCharacter = asyncHandler(async (req, res) => {
+  const { email, lodestone } = req.body
+
+  if (!email || !lodestone) {
+    res.status(400)
+    throw new Error("User not found")
+  }
+
+  const character = await getCharacter(lodestone)
+  const user = await User.findOne({ email })
+
+  if (character && user) {
+    const query = { email: email }
+    const update = {
+      $set: { lodestoneId: lodestone, character: character, verified: false },
+    }
+    await User.findOneAndUpdate(query, update)
+
+    res.json({
+      character: character,
+      verified: user.verified,
+    })
+  } else {
+    res.status(401)
+    throw new Error("There was an error updating your character")
   }
 })
 
@@ -131,7 +166,7 @@ const getCharacter = async id => {
   }
 }
 
-const verifyCharacter = async (id, token) => {
+const verifyToken = async (id, token) => {
   let res = await xiv.character.get(id)
   if (res.Character.Bio.includes(token)) {
     return res.Character
@@ -148,7 +183,8 @@ const generateToken = id => {
 
 module.exports = {
   registerUser,
-  addCharacter,
+  verifyCharacter,
+  updateCharacter,
   loginUser,
   logoutUser,
   getMe,

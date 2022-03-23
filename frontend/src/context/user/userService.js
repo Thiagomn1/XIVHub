@@ -22,7 +22,17 @@ const login = async userData => {
   return response.data
 }
 
-const characterAdd = async characterData => {
+const characterUpdate = async characterData => {
+  const response = await axios.put("/api/users/character/new", characterData)
+
+  if (response.data) {
+    localStorage.setItem("xivUser", JSON.stringify(response.data))
+  }
+
+  return response.data
+}
+
+const characterVerify = async characterData => {
   const response = await axios.put("/api/users/character", characterData)
 
   if (response.data) {
@@ -35,7 +45,8 @@ const characterAdd = async characterData => {
 const userService = {
   register,
   login,
-  characterAdd,
+  characterUpdate,
+  characterVerify,
 }
 
 export default userService

@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar"
 import Home from "./pages/Home"
 import Events from "./pages/Events"
 import Register from "./pages/Register"
-import AddCharacter from "./pages/AddCharacter"
+import Settings from "./pages/Settings"
 import { UserProvider } from "./context/user/userContext"
 import { MenuProvider } from "./context/menu/menuContext"
 
@@ -18,7 +18,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/register" element={<Register />} />
               <Route path="/events" element={<Events />} />
-              <Route path="/addcharacter" element={<AddCharacter />} />
+              <Route path="/addcharacter" element={<Settings />} />
             </Routes>
           </Router>
         </UserProvider>

@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(userReducer, initialState)
 
-  const registerUser = async (userData, token) => {
+  const registerUser = async userData => {
     dispatch({
       type: "LOADING",
     })
@@ -27,6 +27,7 @@ export const UserProvider = ({ children }) => {
     const user = {
       email: userData.email,
       password: userData.password,
+      lodestone: userData.id,
     }
 
     try {
@@ -83,14 +84,38 @@ export const UserProvider = ({ children }) => {
     })
   }
 
-  const addCharacter = async id => {
+  const updateCharacter = async id => {
     const data = {
       email: user.email,
-      lodestoneId: id,
+      lodestone: id,
     }
 
     try {
-      const response = await userService.characterAdd(data)
+      const response = await userService.characterUpdate(data)
+      dispatch({
+        type: "ADD_CHARACTER",
+        payload: response,
+      })
+    } catch (error) {
+      dispatch({
+        type: "ERROR",
+        payload:
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString(),
+      })
+    }
+  }
+
+  const verifyCharacter = async (id, token) => {
+    const data = {
+      email: user.email,
+      lodestone: id,
+      token,
+    }
+
+    try {
+      const response = await userService.characterVerify(data)
       dispatch({
         type: "ADD_CHARACTER",
         payload: response,
@@ -116,7 +141,8 @@ export const UserProvider = ({ children }) => {
         registerUser,
         loginUser,
         logoutUser,
-        addCharacter,
+        updateCharacter,
+        verifyCharacter,
       }}
     >
       {children}

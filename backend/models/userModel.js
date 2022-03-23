@@ -12,11 +12,18 @@ const userSchema = mongoose.Schema(
     },
     lodestoneId: {
       type: String,
+      required: true,
       default: "",
     },
     character: {
       type: Array,
+      required: true,
       default: [],
+    },
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   {

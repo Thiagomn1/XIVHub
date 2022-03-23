@@ -1,17 +1,16 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Modal from "react-modal"
-import { FaRegArrowAltCircleRight, FaCog } from "react-icons/fa"
+import { FaRegArrowAltCircleRight } from "react-icons/fa"
 import UserContext from "../context/user/userContext"
-import Image from "../images/test.png"
 
 Modal.setAppElement("#root")
 
-function Header() {
+function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [modalOpen, setModalOpen] = useState(false)
-  const { loginUser } = useContext(UserContext)
+  const { loginUser, user } = useContext(UserContext)
 
   const navigate = useNavigate()
 
@@ -25,13 +24,16 @@ function Header() {
       password,
     }
     await loginUser(userData)
-    navigate("/")
-    closeModal()
+
+    if (user) {
+      navigate("/")
+      closeModal()
+    }
   }
 
   return (
     <>
-      <button className="btn-outline" onClick={openModal}>
+      <button className="btn-outline btn-logout" onClick={openModal}>
         <FaRegArrowAltCircleRight className="btn-icon" />
         Login
       </button>
@@ -91,7 +93,7 @@ function Header() {
                 onChange={event => setPassword(event.target.value)}
               />
             </div>
-            <button className="btn" style={{ width: "45%", minWidth: "245px" }}>
+            <button className="btn" style={{ width: "45%", minWidth: "200px" }}>
               <FaRegArrowAltCircleRight className="btn-icon" />
               Login
             </button>
@@ -100,9 +102,9 @@ function Header() {
             <button
               onClick={closeModal}
               className="btn btn-outline"
-              style={{ width: "45%", minWidth: "245px", marginTop: "15px" }}
+              style={{ width: "45%", minWidth: "200px", marginTop: "15px" }}
             >
-              New User? Register here
+              Register here
             </button>
           </Link>
         </div>
@@ -111,4 +113,4 @@ function Header() {
   )
 }
 
-export default Header
+export default Login
