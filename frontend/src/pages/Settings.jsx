@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react"
 import UpdateCharacter from "../components/UpdateCharacter"
 import VerifyCharacter from "../components/VerifyCharacter"
 import UserContext from "../context/user/userContext"
-import "./AddCharacter.css"
+import "./Settings.css"
 
 function Settings() {
   const [change, setChange] = useState(false)

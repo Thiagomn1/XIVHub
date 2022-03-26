@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../context/user/userContext"
-import "../pages/AddCharacter.css"
+import "../pages/Settings.css"
 
 function VerifyCharacter() {
   const [lodestone, setLodestone] = useState("")
   const [token, setToken] = useState("")
 
-  const { verifyCharacter, isError } = useContext(UserContext)
+  const { verifyCharacter, isError, isSuccess } = useContext(UserContext)
 
   const navigate = useNavigate()
 
@@ -16,8 +16,13 @@ function VerifyCharacter() {
       console.log(isError)
     }
 
+    if (isSuccess) {
+      console.log("Character successfully verified")
+      navigate("/")
+    }
+
     generateToken()
-  }, [isError])
+  }, [isError, isSuccess])
 
   const onSubmit = async event => {
     event.preventDefault()
@@ -25,7 +30,6 @@ function VerifyCharacter() {
     const id = lodestoneSplit[1]
     console.log(token, lodestone)
     await verifyCharacter(id, token)
-    navigate("/")
   }
 
   const generateToken = () => {

@@ -148,7 +148,7 @@ const updateCharacter = asyncHandler(async (req, res) => {
     await User.findOneAndUpdate(query, update)
 
     res.json({
-      character: character,
+      character: user.character,
       verified: user.verified,
     })
   } else {
