@@ -1,32 +1,28 @@
 import "./EventItem.css"
 
-function EventItem() {
+function EventItem({ event }) {
   return (
     <div className="event-container">
       <div className="event-header">
-        <img
-          className="event-image"
-          src="https://www.pcgamesn.com/wp-content/uploads/2021/04/final-fantasy-xiv-endless-nights-nightclub-1.jpg"
-          alt="Event"
-        />
-        <h3 className="event-title">Test Event</h3>
+        <img className="event-image" src={event.image} alt="Event" />
+        <h3 className="event-title">{event.title}</h3>
       </div>
       <div className="event-details">
-        <div className="event-content">
+        <div className="event-content span-2">
           <h4 className="event-detail">Description</h4>
-          <p className="event-text">Test Description</p>
+          <p className="event-text">{event.description}</p>
         </div>
         <div className="event-content">
           <h4 className="event-detail">Server</h4>
-          <p className="event-text">Excalibur</p>
+          <p className="event-text">{event.server}</p>
         </div>
         <div className="event-content">
           <h4 className="event-detail">Location</h4>
-          <p className="event-text">Mist, W24, P5</p>
+          <p className="event-text">{event.location}</p>
         </div>
         <div className="event-content">
           <h4 className="event-detail">Date</h4>
-          <p className="event-text">03/28/2022</p>
+          <p className="event-text">{event.date}</p>
         </div>
       </div>
     </div>

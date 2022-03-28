@@ -2,8 +2,9 @@ import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import Image from "../images/test.png"
+import "../components/EventItem.css"
 
-function Carousel() {
+function Carousel({ events }) {
   const settings = {
     dots: true,
     infinite: true,
@@ -17,9 +18,11 @@ function Carousel() {
     <div className="carousel">
       <Slider {...settings}>
         <div>
-          <h3>
-            <img src={Image} alt="" />
-          </h3>
+          <img src={events[0].image} alt="" />
+          <div className="event-carousel">
+            <h3 className="event-title">{events[0].title}</h3>
+            <p className="event-text">{events[0].description}</p>
+          </div>
         </div>
         <div>
           <h3>

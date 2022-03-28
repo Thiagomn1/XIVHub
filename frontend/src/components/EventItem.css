@@ -12,10 +12,14 @@
   display: grid;
   justify-content: center;
   align-items: center;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
+}
+
+.span-2 {
+  grid-area: 1 / 1 / 2 / 4;
 }
 
 .event-content {
@@ -42,4 +46,45 @@
 .event-text {
   color: white;
   font-size: 1.2rem;
+}
+
+.event-carousel {
+  position: absolute;
+  bottom: 5px;
+  padding: 10px;
+  background-image: linear-gradient(rgba(31, 31, 31, 0.9), rgba(31, 31, 31, 0.9));
+  width: 100%;
+}
+
+.search-form {
+  background-color: var(--light-gray);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  padding: 10px;
+  width: 90%;
+}
+
+.search-dropdown {
+  background-color: var(--dark-grey);
+  color: #fff;
+  border: 1px solid rgb(80, 80, 80);
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-right: 20px;
+}
+
+.search-input {
+  background-color: var(--dark-grey);
+  border: 1px solid rgb(80, 80, 80);
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-right: 20px;
+  color: white;
+}
+
+.search-input::placeholder {
+  color: white;
 }

@@ -6,23 +6,26 @@ import Register from "./pages/Register"
 import Settings from "./pages/Settings"
 import { UserProvider } from "./context/user/userContext"
 import { MenuProvider } from "./context/menu/menuContext"
+import { EventProvider } from "./context/event/eventContext"
 
 function App() {
   return (
     <>
-      <MenuProvider>
-        <UserProvider>
-          <Router>
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/addcharacter" element={<Settings />} />
-            </Routes>
-          </Router>
-        </UserProvider>
-      </MenuProvider>
+      <EventProvider>
+        <MenuProvider>
+          <UserProvider>
+            <Router>
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/addcharacter" element={<Settings />} />
+              </Routes>
+            </Router>
+          </UserProvider>
+        </MenuProvider>
+      </EventProvider>
     </>
   )
 }

@@ -138,6 +138,7 @@ export const UserProvider = ({ children }) => {
         xivUser: state.xivUser,
         loading: state.loading,
         isError: state.isError,
+        isSucess: state.isSuccess,
         registerUser,
         loginUser,
         logoutUser,
