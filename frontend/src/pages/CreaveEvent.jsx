@@ -55,7 +55,7 @@ function Register() {
             <span className="required">* </span> Event Title:
           </label>
           <input
-            type="title"
+            type="text"
             name="title"
             value={title}
             id="title"
@@ -68,7 +68,7 @@ function Register() {
             <span className="required">* </span>Description:
           </label>
           <input
-            type="description"
+            type="text"
             name="description"
             value={description}
             id="description"
@@ -81,7 +81,7 @@ function Register() {
             <span className="required">* </span>Location:
           </label>
           <input
-            type="location"
+            type="text"
             name="location"
             value={location}
             id="location"
