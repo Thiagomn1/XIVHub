@@ -10,6 +10,15 @@ const userReducer = (state, action) => {
       return {
         ...state,
         loading: false,
+        isSuccess: true,
+        events: action.payload,
+      }
+
+    case "CREATE_EVENT":
+      return {
+        ...state,
+        loading: false,
+        isSuccess: true,
         events: action.payload,
       }
 

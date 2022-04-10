@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react"
+import { Link } from "react-router-dom"
 import EventContext from "../context/event/eventContext"
 import EventItem from "../components/EventItem"
 import Spinner from "../components/Spinner"
@@ -16,6 +17,11 @@ function Events() {
 
   return (
     <div>
+      <div className="search-form container">
+        <Link to="/createevent">
+          <button className="btn-outline">New Event</button>
+        </Link>
+      </div>
       <form className="search-form container">
         <div className="select">
           <select name="datacenter" id="datacenter" className="search-dropdown">
@@ -40,9 +46,7 @@ function Events() {
         </div>
         <input type="text" name="tag" id="tag" placeholder="Tags" className="search-input" />
       </form>
-      {events.map(event => (
-        <EventItem key={event._id} event={event} />
-      ))}
+      {events && events.map(event => <EventItem key={event._id} event={event} />)}
     </div>
   )
 }

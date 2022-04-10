@@ -4,7 +4,7 @@ const User = require("../models/UserModel")
 const Event = require("../models/EventModel")
 
 const getAllEvents = asyncHandler(async (req, res) => {
-  const events = await Event.find()
+  const events = await Event.find().sort({ createdAt: -1 })
 
   res.json(events)
 })

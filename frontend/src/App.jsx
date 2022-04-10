@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Events from "./pages/Events"
 import Register from "./pages/Register"
 import Settings from "./pages/Settings"
+import CreateEvent from "./pages/CreaveEvent"
 import { UserProvider } from "./context/user/userContext"
 import { MenuProvider } from "./context/menu/menuContext"
 import { EventProvider } from "./context/event/eventContext"
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/addcharacter" element={<Settings />} />
+                <Route path="/createevent" element={<CreateEvent />} />
               </Routes>
             </Router>
           </UserProvider>

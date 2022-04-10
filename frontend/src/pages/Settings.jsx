@@ -42,7 +42,7 @@ function Settings() {
             </div>
           </section>
 
-          {xivUser.verified && <h3 className="card-title container">Characted already verified!</h3>}
+          {xivUser.verified && <h3 className="card-title container">Character already verified!</h3>}
 
           {change ? <UpdateCharacter /> : !xivUser.verified && <VerifyCharacter />}
         </>

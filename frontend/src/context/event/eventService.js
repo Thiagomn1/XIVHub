@@ -6,8 +6,15 @@ const getAllEvents = async () => {
   return response.data
 }
 
+const createEvent = async eventData => {
+  const response = await axios.post("/api/events", eventData)
+
+  return response.data
+}
+
 const eventService = {
   getAllEvents,
+  createEvent,
 }
 
 export default eventService

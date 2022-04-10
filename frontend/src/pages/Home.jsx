@@ -36,7 +36,7 @@ function Home() {
       </div>
       <section className="events">
         <h2 className="sub-heading">Events</h2>
-        {events ? <Carousel events={events} /> : <h2>No events</h2>}
+        {events && events ? <Carousel events={events} /> : <h2>No events</h2>}
       </section>
     </>
   )

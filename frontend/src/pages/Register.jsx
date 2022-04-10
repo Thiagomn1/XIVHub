@@ -84,7 +84,7 @@ function Register() {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="passwordConfirm" className="form-text">
+          <label htmlFor="lodestone" className="form-text">
             <span className="required">* </span>Lodestone URL:
           </label>
           <input

@@ -36,6 +36,28 @@ export const EventProvider = ({ children }) => {
     }
   }
 
+  const createEvent = async eventData => {
+    dispatch({
+      type: "LOADING",
+    })
+
+    try {
+      const response = await eventService.createEvent(eventData)
+      dispatch({
+        type: "CREATE_EVENT",
+        payload: response,
+      })
+    } catch (error) {
+      dispatch({
+        type: "ERROR",
+        payload:
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString(),
+      })
+    }
+  }
+
   return (
     <EventContext.Provider
       value={{
@@ -44,6 +66,7 @@ export const EventProvider = ({ children }) => {
         isError: state.isError,
         isSucess: state.isSuccess,
         getEvents,
+        createEvent,
       }}
     >
       {children}
