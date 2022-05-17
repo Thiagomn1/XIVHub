@@ -1,7 +1,6 @@
 import Slider from "react-slick"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
-import Image from "../images/test.png"
 import "../components/EventItem.css"
 
 function Carousel({ events }) {
@@ -17,23 +16,23 @@ function Carousel({ events }) {
   return (
     <div className="carousel">
       <Slider {...settings}>
-        <div>
-          <img src={events[0].image} alt="" />
-          <div className="event-carousel">
-            <h3 className="event-title">{events[0].title}</h3>
-            <p className="event-text">{events[0].description}</p>
-          </div>
-        </div>
-        <div>
-          <h3>
-            <img src={Image} alt="" />
-          </h3>
-        </div>
-        <div>
-          <h3>
-            <img src={Image} alt="" />
-          </h3>
-        </div>
+        {events &&
+          events.map(event => (
+            <div key={event._id}>
+              <img src={event.image} alt="" />
+              <div className="event-carousel">
+                <div className="event-wrapper">
+                  <div>
+                    <h3 className="event-title">{event.title}</h3>
+                    <p className="event-text">{event.description}</p>
+                  </div>
+                  <div className="event-date">
+                    <p className="event-text">{event.date}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
       </Slider>
     </div>
   )

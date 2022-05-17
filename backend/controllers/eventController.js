@@ -43,7 +43,7 @@ const createEvent = asyncHandler(async (req, res) => {
     description,
     location,
     server,
-    date: newDate,
+    date: newDate.toDateString(),
     image,
   })
 
