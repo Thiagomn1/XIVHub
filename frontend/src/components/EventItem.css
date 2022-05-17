@@ -52,8 +52,21 @@
   position: absolute;
   bottom: 5px;
   padding: 10px;
-  background-image: linear-gradient(rgba(31, 31, 31, 0.9), rgba(31, 31, 31, 0.9));
+  background-color: rgba(31, 31, 31, 0.5);
   width: 100%;
+}
+
+.event-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.event-date {
+  position: relative;
+  bottom: 19px;
+  background-color: var(--light-purple);
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .search-form {
